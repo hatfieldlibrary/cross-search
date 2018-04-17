@@ -1,0 +1,24 @@
+# Directories #
+build/
+bin/
+repos/
+:w/repos/
+doc/
+/doc/
+.gradle/
+/bin/
+target/
+ 
+# OS Files #
+.DS_Store
+# User-specific stuff:
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
+# Gradle:
+.idea/gradle.xml
+.idea/libraries
+
+
