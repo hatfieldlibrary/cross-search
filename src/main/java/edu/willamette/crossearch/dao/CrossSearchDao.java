@@ -28,7 +28,7 @@ public class CrossSearchDao {
     public NormalizedResult execQuery(String terms, String offset, String mode, String collections) {
 
         StatefulRecordHolder holder = new StatefulRecordHolder();
-        Flowable<RepositoryInterface> urls = getUrls(terms, offset, mode, collections);
+        Flowable<RepositoryInterface> urls = getUrls();
         List<NormalizedResult> result = urls.flatMap(
                 url -> execRepoQuery(url, terms, offset, mode, collections)
                         .subscribeOn(Schedulers.io())
@@ -43,7 +43,7 @@ public class CrossSearchDao {
         return Flowable.fromCallable(() -> repository.execQuery(terms, offset, mode, collections));
     }
 
-    private Flowable<RepositoryInterface> getUrls(String terms, String offset, String mode, String collections) {
+    private Flowable<RepositoryInterface> getUrls() {
 
         List<RepositoryInterface> queries = new ArrayList<>();
         queries.add(contentdmRepository);
