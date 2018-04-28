@@ -1,12 +1,29 @@
 package edu.willamette.crossearch.dao;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import edu.willamette.crossearch.model.existdb.CombinedResult;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
-public class HttpConnection {
+public class DataRequest {
+
+    public StringBuffer getData(String queryUrl) {
+
+        URL url = null;
+        try {
+            url = new URL(queryUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        StringBuffer response = request(url);
+        return response;
+    }
 
     public StringBuffer request(URL url) {
 

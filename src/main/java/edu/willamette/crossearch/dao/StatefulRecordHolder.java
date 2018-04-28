@@ -3,12 +3,17 @@ package edu.willamette.crossearch.dao;
 import edu.willamette.crossearch.model.NormalizedPager;
 import edu.willamette.crossearch.model.NormalizedRecord;
 import edu.willamette.crossearch.model.NormalizedResult;
+import edu.willamette.crossearch.repository.ExistDbRepository;
 import io.reactivex.Flowable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StatefulRecordHolder {
+
+    Logger log = LogManager.getLogger(StatefulRecordHolder.class);
 
     private final NormalizedResult normalizedResult = new NormalizedResult();
     private final List<NormalizedRecord> combinedRecords = new ArrayList<>();
@@ -22,6 +27,7 @@ public class StatefulRecordHolder {
 
     private NormalizedResult getCombinedResult(NormalizedResult result, String offset, String increment) {
 
+        log.debug("Getting combined result");
         if (result.getPager().getTotalRecs() > total) {
             total = result.getPager().getTotalRecs();
             combinedPager.setTotalRecs(total);

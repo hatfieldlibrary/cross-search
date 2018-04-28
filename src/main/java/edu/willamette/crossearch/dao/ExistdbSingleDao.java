@@ -36,7 +36,7 @@ public class ExistdbSingleDao {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        HttpConnection httpConnection = new HttpConnection();
+        DataRequest httpConnection = new DataRequest();
         StringBuffer response = httpConnection.request(url);
         Result existResult = gson.fromJson(response.toString(), Result.class);
         return existResult;

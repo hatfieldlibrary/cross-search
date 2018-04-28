@@ -27,6 +27,7 @@ public class ContentdmRepository implements RepositoryInterface {
     @Cacheable("search")
     public NormalizedResult execQuery(String terms, String offset, String mode, String collections) {
 
+        log.debug("Contentdm query");
         Result cdmResult = contentdmDao.execQuery(terms, reduceOffset(offset), mode, collections);
         return normalize(cdmResult);
     }

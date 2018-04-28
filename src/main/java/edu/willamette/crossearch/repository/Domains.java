@@ -14,6 +14,13 @@ public enum Domains {
             "all^{$query}^{$mode}^and",
             "",
             "",
+            "10"),
+
+    DSPACE("dspace.willamette.edu:3000",
+            "ds-api/solrQuery",
+            "/search/{$query}/discover/0/",
+            "",
+            "",
             "10");
 
     private final String host;

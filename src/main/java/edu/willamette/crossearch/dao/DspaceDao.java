@@ -1,43 +1,40 @@
 package edu.willamette.crossearch.dao;
 
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import edu.willamette.crossearch.model.contentdm.Result;
+import edu.willamette.crossearch.model.dspace.SolrResult;
 import edu.willamette.crossearch.model.existdb.CombinedResult;
 import edu.willamette.crossearch.repository.Domains;
-import org.springframework.beans.factory.annotation.Value;
+import edu.willamette.crossearch.repository.DspaceResponse;
 import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 @Component
-public class ExistdbDao {
+public class DspaceDao {
 
-    private final String existHost;
+    private final String dspaceHost;
     private final String query;
     private final String rootPath;
     private final String setSize;
 
-    @Value("${exist.default}")
-    String collections;
+    public DspaceDao() {
 
-    public ExistdbDao() {
-
-        existHost = Domains.EXIST.getHost();
-        query = Domains.EXIST.getQuery();
-        rootPath = Domains.EXIST.getRootPath();
-        setSize = Domains.EXIST.getSetSize();
+        dspaceHost = Domains.DSPACE.getHost();
+        query = Domains.DSPACE.getQuery();
+        rootPath = Domains.DSPACE.getRootPath();
+        setSize = Domains.DSPACE.getSetSize();
     }
-
-    public CombinedResult execQuery(String terms, String offset, String mode, String collections) {
+    public SolrResult execQuery(String terms, String offset, String mode, String collections) {
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String queryUrl = formatQuery(terms, offset, mode, collections);
         DataRequest dataRequest = new DataRequest();
         StringBuffer buffer =  dataRequest.getData(queryUrl);
-        CombinedResult existResult = gson.fromJson(buffer.toString(), CombinedResult.class);
-        return existResult;
+        SolrResult dspace = gson.fromJson(buffer.toString(), SolrResult.class);
+        return dspace;
     }
 
     /**
@@ -51,19 +48,22 @@ public class ExistdbDao {
 
         // If specific collections are provided in the request,
         // use them and not the default collection value.
-        if (!requestCollections.contentEquals("all")) {
-            collections = requestCollections;
-        }
+
+        // Ignore this for now. It may be useful for single collection searches (not yet implemented in dspace api)
+        //if (!requestCollections.contentEquals("all")) {
+        //    collections = requestCollections;
+       // }
+
 
         String url = "http://" +
-                existHost + "/" +
-                rootPath + "&collection=" +
-                collections + "&q=" +
-                query + "&records=" +
-                setSize + "&start=" +
-                offset;
+                dspaceHost + "/" +
+                rootPath + "/" +
+                query + "/" +
+                offset + "/" +
+                setSize;
 
         terms = terms.replace(" ", "+");
-        return url.replace("{$query}", terms).replace("{$mode}", mode);
+        return url.replace("{$query}", terms);
     }
+
 }

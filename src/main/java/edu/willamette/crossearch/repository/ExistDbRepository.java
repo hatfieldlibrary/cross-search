@@ -8,6 +8,8 @@ import edu.willamette.crossearch.model.existdb.CollectionResults;
 import edu.willamette.crossearch.model.existdb.CombinedResult;
 import edu.willamette.crossearch.model.existdb.Item;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,8 @@ import java.util.List;
 @Component
 public class ExistDbRepository implements RepositoryInterface {
 
+    Logger log = LogManager.getLogger(ExistDbRepository.class);
+
     @Autowired
     ExistdbDao existdbDao;
 
@@ -25,6 +29,7 @@ public class ExistDbRepository implements RepositoryInterface {
     @Cacheable("search")
     public NormalizedResult execQuery(String terms, String offset, String mode, String collections) {
 
+        log.debug("exist query");
         CombinedResult result = existdbDao.execQuery(terms, offset, mode, collections);
         return normalize(result, offset);
 

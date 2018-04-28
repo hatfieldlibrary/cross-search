@@ -1,6 +1,7 @@
 package edu.willamette.crossearch.dao;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import edu.willamette.crossearch.model.contentdm.Result;
 import edu.willamette.crossearch.repository.Domains;
 import org.apache.logging.log4j.LogManager;
@@ -34,30 +35,15 @@ public class ContentdmDao {
         rootPath = Domains.CONDM.getRootPath();
         returnFields = Domains.CONDM.getReturnFields();
         setSize = Domains.CONDM.getSetSize();
-
-//        Flowable cdm = Flowable.fromCallable(() -> execQuery(queryUrl));
-        // Eventually will do object mapping and normalizaton.
-        // Not yet sure we gain by using separate thread.
-//        List<String> result = cdm
-//                .flatMap(json -> json)
-//                .toList()
-//                .blockingGet();
-
     }
 
     public Result execQuery (String terms, String offset, String mode, String collections) {
 
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String queryUrl = formatQuery(terms, offset, mode, collections);
-        Gson gson = new Gson();
-        URL url = null;
-        try {
-            url = new URL(queryUrl);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        HttpConnection httpConnection = new HttpConnection();
-        StringBuffer response = httpConnection.request(url);
-        Result cdmResult = gson.fromJson(response.toString(), Result.class);
+        DataRequest dataRequest = new DataRequest();
+        StringBuffer buffer =  dataRequest.getData(queryUrl);
+        Result cdmResult = gson.fromJson(buffer.toString(), Result.class);
         return cdmResult;
     }
 
@@ -89,12 +75,12 @@ public class ContentdmDao {
                 "/1/0/0/0/0/0/json";
 
         String cdmMode = getCdmMode(mode);
-
         terms = terms.replace(" ", "+");
         return url.replace("{$query}", terms).replace("{$mode}", cdmMode);
     }
 
     private String getCdmMode(String mode) {
+
         if (mode.contentEquals("phrase")) {
             return "exact";
         }
