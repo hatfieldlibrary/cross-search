@@ -1,10 +1,14 @@
 package edu.willamette.crossearch.model.contentdm;
 
+import com.google.gson.annotations.Expose;
+
 public class Pager {
 
-
+    @Expose
     private String start;
+    @Expose
     private String maxrecs;
+    @Expose
     private Integer total;
 
     public Pager() {}

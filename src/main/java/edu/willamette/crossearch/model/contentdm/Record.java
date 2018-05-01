@@ -1,18 +1,39 @@
 package edu.willamette.crossearch.model.contentdm;
 
+import com.google.gson.annotations.Expose;
+
 public class Record {
 
+    @Expose
     private String collection;
-    private String pointer;
+    @Expose
+    private Integer pointer;
+    @Expose
+    private String creato;
+    @Expose
     private String filetype;
+    @Expose
     private Integer parentobject;
+    @Expose
     private String descri;
+    @Expose
     private String title;
+    @Expose
     private String source;
+    @Expose
     private String date;
+    @Expose
     private String find;
 
     public Record() {}
+
+    public String getCreato() {
+        return creato;
+    }
+
+    public void setCreato(String creato) {
+        this.creato = creato;
+    }
 
     public String getCollection() {
         return collection;
@@ -22,11 +43,11 @@ public class Record {
         this.collection = collection;
     }
 
-    public String getPointer() {
+    public Integer getPointer() {
         return pointer;
     }
 
-    public void setPointer(String pointer) {
+    public void setPointer(Integer pointer) {
         this.pointer = pointer;
     }
 

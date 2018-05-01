@@ -1,11 +1,16 @@
 package edu.willamette.crossearch.model.dspace;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.List;
 
 public class SolrResult {
 
+    @Expose
     public Integer count;
+    @Expose
     public Integer offset;
+    @Expose
     public List<Result> results;
 
     public Integer getCount() {

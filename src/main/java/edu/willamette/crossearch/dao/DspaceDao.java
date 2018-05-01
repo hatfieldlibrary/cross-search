@@ -2,15 +2,9 @@ package edu.willamette.crossearch.dao;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import edu.willamette.crossearch.model.contentdm.Result;
 import edu.willamette.crossearch.model.dspace.SolrResult;
-import edu.willamette.crossearch.model.existdb.CombinedResult;
 import edu.willamette.crossearch.repository.Domains;
-import edu.willamette.crossearch.repository.DspaceResponse;
 import org.springframework.stereotype.Component;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 @Component
 public class DspaceDao {

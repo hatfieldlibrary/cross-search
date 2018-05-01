@@ -3,7 +3,6 @@ package edu.willamette.crossearch.dao;
 import edu.willamette.crossearch.model.NormalizedPager;
 import edu.willamette.crossearch.model.NormalizedRecord;
 import edu.willamette.crossearch.model.NormalizedResult;
-import edu.willamette.crossearch.repository.ExistDbRepository;
 import io.reactivex.Flowable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

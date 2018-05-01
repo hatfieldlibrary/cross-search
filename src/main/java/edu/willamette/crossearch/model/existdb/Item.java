@@ -17,6 +17,7 @@ public class Item
     @Expose
     private String title;
 
+    @Expose
     private String objid;
 
     @Expose

@@ -18,7 +18,7 @@ public enum Domains {
 
     DSPACE("dspace.willamette.edu:3000",
             "ds-api/solrQuery",
-            "/search/{$query}/discover/0/",
+            "search/{$query}/discover",
             "",
             "",
             "10");

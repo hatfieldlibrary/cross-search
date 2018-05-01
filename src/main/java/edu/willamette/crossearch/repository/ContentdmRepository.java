@@ -5,7 +5,7 @@ import edu.willamette.crossearch.model.NormalizedPager;
 import edu.willamette.crossearch.model.NormalizedRecord;
 import edu.willamette.crossearch.model.NormalizedResult;
 import edu.willamette.crossearch.model.contentdm.Record;
-import edu.willamette.crossearch.model.contentdm.Result;
+import edu.willamette.crossearch.model.contentdm.CdmResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +28,11 @@ public class ContentdmRepository implements RepositoryInterface {
     public NormalizedResult execQuery(String terms, String offset, String mode, String collections) {
 
         log.debug("Contentdm query");
-        Result cdmResult = contentdmDao.execQuery(terms, reduceOffset(offset), mode, collections);
+        CdmResult cdmResult = contentdmDao.execQuery(terms, reduceOffset(offset), mode, collections);
         return normalize(cdmResult);
     }
 
-    private NormalizedResult normalize(Result results) {
+    private NormalizedResult normalize(CdmResult results) {
 
         NormalizedResult normalizedResult = new NormalizedResult();
         List<NormalizedRecord> mappedResult = new ArrayList<>();
@@ -43,7 +43,7 @@ public class ContentdmRepository implements RepositoryInterface {
                 normalizedRecord.setCollection(record.getCollection());
                 normalizedRecord.setDate(record.getDate());
                 normalizedRecord.setDescription(record.getDescri());
-                normalizedRecord.setId(record.getPointer());
+                normalizedRecord.setId(Integer.toString(record.getPointer()));
                 normalizedRecord.setFiletype(record.getFiletype());
                 normalizedRecord.setLocator(record.getFind());
                 normalizedRecord.setSource(record.getSource());

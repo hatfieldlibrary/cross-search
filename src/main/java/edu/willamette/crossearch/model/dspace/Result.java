@@ -1,16 +1,25 @@
 package edu.willamette.crossearch.model.dspace;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.List;
 
 public class Result {
 
+    @Expose
     public String handle;
+    @Expose
     public String resourceid;
+    @Expose
     public String resourcetype;
+    @Expose
     public List<String> author;
+    @Expose
     public List<String> title;
+    @Expose
     public String defaultTitle;
-    public String description;
+    @Expose
+    public List<String> description;
 
     public String getHandle() {
         return handle;
@@ -60,11 +69,11 @@ public class Result {
         this.defaultTitle = defaultTitle;
     }
 
-    public String getDescription() {
+    public List<String> getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(List<String> description) {
         this.description = description;
     }
 }

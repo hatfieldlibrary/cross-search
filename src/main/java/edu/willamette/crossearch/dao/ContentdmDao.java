@@ -2,15 +2,12 @@ package edu.willamette.crossearch.dao;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import edu.willamette.crossearch.model.contentdm.Result;
+import edu.willamette.crossearch.model.contentdm.CdmResult;
 import edu.willamette.crossearch.repository.Domains;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 @Component
 public class ContentdmDao {
@@ -37,13 +34,14 @@ public class ContentdmDao {
         setSize = Domains.CONDM.getSetSize();
     }
 
-    public Result execQuery (String terms, String offset, String mode, String collections) {
+    public CdmResult execQuery (String terms, String offset, String mode, String collections) {
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String queryUrl = formatQuery(terms, offset, mode, collections);
         DataRequest dataRequest = new DataRequest();
         StringBuffer buffer =  dataRequest.getData(queryUrl);
-        Result cdmResult = gson.fromJson(buffer.toString(), Result.class);
+        CdmResult cdmResult = gson.fromJson(buffer.toString(), CdmResult.class);
+
         return cdmResult;
     }
 

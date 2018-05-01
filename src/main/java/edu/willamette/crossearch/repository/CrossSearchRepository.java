@@ -46,7 +46,7 @@ public class CrossSearchRepository implements RepositoryInterface {
                         .flatMap(rec -> holder.combineResult(rec, offset, "10")), 5)
                 .toList()
                 .blockingGet();
-        log.debug("Returng cross search result");
+        log.debug("Return cross search result");
         return result.get(0);
     }
 

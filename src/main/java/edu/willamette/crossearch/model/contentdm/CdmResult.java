@@ -1,13 +1,17 @@
 package edu.willamette.crossearch.model.contentdm;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.List;
 
-public class Result {
+public class CdmResult {
 
+    @Expose
     Pager pager;
+    @Expose
     List<Record> records;
 
-    public Result() {}
+    public CdmResult() {}
 
     public Pager getPager() {
         return pager;

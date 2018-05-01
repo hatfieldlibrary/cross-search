@@ -42,7 +42,9 @@ public class DspaceRepository implements RepositoryInterface {
                 normalizedRecord.setRepository("dspace");
                 normalizedRecord.setCollection(record.getResourceid());
                 normalizedRecord.setDate("");
-                normalizedRecord.setDescription(record.getDescription());
+                if (record.getDescription() != null && record.getDescription().size() > 0) {
+                    normalizedRecord.setDescription(record.getDescription().get(0));
+                }
                 normalizedRecord.setId(record.getResourceid());
                 normalizedRecord.setFiletype(record.getResourcetype());
                 normalizedRecord.setLocator(record.getHandle());
