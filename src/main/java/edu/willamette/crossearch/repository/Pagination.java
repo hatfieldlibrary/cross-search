@@ -1,16 +1,22 @@
 package edu.willamette.crossearch.repository;
 
 import edu.willamette.crossearch.model.NormalizedPager;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Pagination {
 
-    private static final Integer increment = 10;
+
+    @Value("${record.count}")
+    Integer increment;
 
     public boolean hasNext(NormalizedPager pager, String offset) {
 
-        return pager.getTotalRecs() > Integer.valueOf(offset) + increment;
+        if (pager != null) {
+            return pager.getTotalRecs() > Integer.valueOf(offset) + increment;
+        }
+        return false;
     }
 
     public boolean hasPrev(String offset) {

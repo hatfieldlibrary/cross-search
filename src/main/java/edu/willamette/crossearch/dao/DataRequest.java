@@ -25,11 +25,12 @@ public class DataRequest {
         return response;
     }
 
-    public StringBuffer request(URL url) {
+    private StringBuffer request(URL url) {
 
         StringBuffer content = new StringBuffer();
         try {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestProperty("Content-Type", "application/json");
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;

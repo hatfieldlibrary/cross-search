@@ -20,6 +20,16 @@ public class Result {
     public String defaultTitle;
     @Expose
     public List<String> description;
+    @Expose
+    public List<String> collectionId;
+
+    public List<String> getCollectionId() {
+        return collectionId;
+    }
+
+    public void setCollectionId(List<String> collectionId) {
+        this.collectionId = collectionId;
+    }
 
     public String getHandle() {
         return handle;

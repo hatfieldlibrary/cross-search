@@ -4,31 +4,47 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.willamette.crossearch.model.dspace.SolrResult;
 import edu.willamette.crossearch.repository.Domains;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DspaceDao {
 
+    Logger log = LogManager.getLogger(DspaceDao.class);
+
     private final String dspaceHost;
     private final String query;
     private final String rootPath;
-    private final String setSize;
+
+    @Value("${record.count}")
+    String setSize;
 
     public DspaceDao() {
 
         dspaceHost = Domains.DSPACE.getHost();
         query = Domains.DSPACE.getQuery();
         rootPath = Domains.DSPACE.getRootPath();
-        setSize = Domains.DSPACE.getSetSize();
     }
+
+    @Cacheable("dspace")
     public SolrResult execQuery(String terms, String offset, String mode, String collections) {
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        if(mode.contentEquals("phrase")) {
+            terms = "\"" + terms + "\"";
+        }
         String queryUrl = formatQuery(terms, offset, mode, collections);
         DataRequest dataRequest = new DataRequest();
         StringBuffer buffer =  dataRequest.getData(queryUrl);
-        SolrResult dspace = gson.fromJson(buffer.toString(), SolrResult.class);
-        return dspace;
+        SolrResult dspace;
+        if (buffer != null) {
+            dspace = gson.fromJson(buffer.toString(), SolrResult.class);
+            return dspace;
+        }
+        return new SolrResult();
     }
 
     /**
@@ -40,22 +56,12 @@ public class DspaceDao {
      */
     private String formatQuery(String terms, String offset, String mode, String requestCollections) {
 
-        // If specific collections are provided in the request,
-        // use them and not the default collection value.
-
-        // Ignore this for now. It may be useful for single collection searches (not yet implemented in dspace api)
-        //if (!requestCollections.contentEquals("all")) {
-        //    collections = requestCollections;
-       // }
-
-
         String url = "http://" +
                 dspaceHost + "/" +
                 rootPath + "/" +
                 query + "/" +
                 offset + "/" +
                 setSize;
-
         terms = terms.replace(" ", "+");
         return url.replace("{$query}", terms);
     }

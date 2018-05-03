@@ -12,7 +12,7 @@ public class NormalizedRecord {
     private String filetype;
     private String description;
     private String title;
-    private String source;
+    private  String source;
     private String date;
     private List<Hits> hits;
     private String locator;
@@ -65,7 +65,7 @@ public class NormalizedRecord {
         this.title = title;
     }
 
-    public String getSource() {
+    public  String getSource() {
         return source;
     }
 

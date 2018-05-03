@@ -1,12 +1,14 @@
 package edu.willamette.crossearch.repository;
 
 import edu.willamette.crossearch.dao.StatefulRecordHolder;
+import edu.willamette.crossearch.model.NormalizedRecord;
 import edu.willamette.crossearch.model.NormalizedResult;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
@@ -27,15 +29,19 @@ public class CrossSearchRepository implements RepositoryInterface {
     @Autowired
     DspaceRepository dspaceRepository;
 
+    @Value("${record.count}")
+    String setSize;
+
     /**
-     * This is the core cross-search method that queries repositories.
+     * This is the core cross-search method that queries repositories. Repository
+     * queries and data normalization is handled on separate threads. The result
+     * is sorted on the servlet request thread.
      * @param terms search term
      * @param offset current offset position in the result list
      * @param mode the query mode (all, any, phrase), default 'all'
      * @param collections the collections to search, default 'all'
      * @return
      */
-    @Cacheable("search")
     public NormalizedResult execQuery(String terms, String offset, String mode, String collections) {
 
         StatefulRecordHolder holder = new StatefulRecordHolder();
@@ -43,7 +49,7 @@ public class CrossSearchRepository implements RepositoryInterface {
         List<NormalizedResult> result = repos.flatMap(
                 repo -> execRepoQuery(repo, terms, offset, mode, collections)
                         .subscribeOn(Schedulers.io())
-                        .flatMap(rec -> holder.combineResult(rec, offset, "10")), 5)
+                        .flatMap(rec -> holder.combineResult(rec, offset, setSize)), 5)
                 .toList()
                 .blockingGet();
         log.debug("Return cross search result");
@@ -80,4 +86,5 @@ public class CrossSearchRepository implements RepositoryInterface {
         queries.add(dspaceRepository);
         return Flowable.fromIterable(queries);
     }
+
 }

@@ -7,11 +7,14 @@ import edu.willamette.crossearch.model.NormalizedResult;
 import edu.willamette.crossearch.model.existdb.Item;
 import edu.willamette.crossearch.model.existdb.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class ExistDbSingleRepository implements RepositoryInterface {
@@ -19,8 +22,10 @@ public class ExistDbSingleRepository implements RepositoryInterface {
     @Autowired
     ExistdbSingleDao existdbSingleDao;
 
+    @Value("${record.count}")
+    String setSize;
+
     @Override
-    @Cacheable("search")
     public NormalizedResult execQuery(String terms, String offset, String mode, String collections) {
 
         Result result = existdbSingleDao.execQuery(terms, offset, mode, collections);
@@ -39,9 +44,13 @@ public class ExistDbSingleRepository implements RepositoryInterface {
             NormalizedRecord normalizedRecord = existUtils.getNormalizedRecord(item);
             mappedResult.add(normalizedRecord);
         }
-        normalizedResult.setRecords(mappedResult);
+        Map<String, List<NormalizedRecord>> map =
+                mappedResult.stream()
+                        .collect(Collectors.groupingBy(NormalizedRecord::getSource));
+
+        normalizedResult.setRecords(map);
         NormalizedPager normalizedPager = new NormalizedPager();
-        normalizedPager.setPagingIncrement("10");
+        normalizedPager.setPagingIncrement(setSize);
         normalizedPager.setStartIndex(offset);
         normalizedPager.setTotalRecs(Integer.valueOf(total));
         normalizedResult.setPager(normalizedPager);

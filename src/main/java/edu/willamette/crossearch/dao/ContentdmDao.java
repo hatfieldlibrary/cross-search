@@ -7,6 +7,7 @@ import edu.willamette.crossearch.repository.Domains;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,10 +20,12 @@ public class ContentdmDao {
     private final String sort;
     private final String rootPath;
     private final String returnFields;
-    private final String setSize;
 
     @Value("${cdm.default}")
     String collections;
+
+    @Value("${record.count}")
+    String setSize;
 
     public ContentdmDao() {
 
@@ -31,18 +34,26 @@ public class ContentdmDao {
         sort = Domains.CONDM.getSort();
         rootPath = Domains.CONDM.getRootPath();
         returnFields = Domains.CONDM.getReturnFields();
-        setSize = Domains.CONDM.getSetSize();
     }
 
+    @Cacheable("contentdm")
     public CdmResult execQuery (String terms, String offset, String mode, String collections) {
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String queryUrl = formatQuery(terms, offset, mode, collections);
         DataRequest dataRequest = new DataRequest();
         StringBuffer buffer =  dataRequest.getData(queryUrl);
-        CdmResult cdmResult = gson.fromJson(buffer.toString(), CdmResult.class);
 
-        return cdmResult;
+        try {
+            CdmResult cdmResult = gson.fromJson(buffer.toString(), CdmResult.class);
+            return cdmResult;
+        } catch (Exception e) {
+            log.warn("Invalid Contentdm response");
+            return new CdmResult();
+
+        }
+
+
     }
 
     /**

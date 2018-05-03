@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.willamette.crossearch.model.existdb.Result;
 import edu.willamette.crossearch.repository.Domains;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
@@ -14,30 +16,27 @@ public class ExistdbSingleDao {
     private final String existHost;
     private final String query;
     private final String rootPath;
-    private final String setSize;
     private String collection;
+
+    @Value("${record.count}")
+    String setSize;
 
     public ExistdbSingleDao() {
 
         existHost = Domains.EXIST.getHost();
         query = Domains.EXIST.getQuery();
         rootPath = Domains.EXIST.getRootPath();
-        setSize = Domains.EXIST.getSetSize();
+
     }
 
+    @Cacheable("existdb2")
     public Result execQuery(String terms, String offset, String mode, String collection) {
 
         this.collection = collection;
         String queryUrl = formatQuery(terms, offset, mode, collection);
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        URL url = null;
-        try {
-            url = new URL(queryUrl);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
         DataRequest httpConnection = new DataRequest();
-        StringBuffer response = httpConnection.request(url);
+        StringBuffer response = httpConnection.getData(queryUrl);
         Result existResult = gson.fromJson(response.toString(), Result.class);
         return existResult;
 
@@ -58,8 +57,6 @@ public class ExistdbSingleDao {
         if (!requestCollections.contentEquals("all")) {
             collection = requestCollections;
         }
-
-
         String url = "http://" +
                 existHost + "/" +
                 rootPath + "&collection=" +

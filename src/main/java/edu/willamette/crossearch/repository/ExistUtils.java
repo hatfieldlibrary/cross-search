@@ -13,7 +13,7 @@ public class ExistUtils {
         //  normalizedRecord.setDescription(item.getDescription());
         normalizedRecord.setId(item.getDate());
         normalizedRecord.setHits(item.getHits());
-        normalizedRecord.setFiletype("xml");
+        normalizedRecord.setFiletype("document");
         normalizedRecord.setLocator(item.getDate());
         normalizedRecord.setSource(getCollectionName(item.getCollection()));
         normalizedRecord.setTitle(item.getTitle());

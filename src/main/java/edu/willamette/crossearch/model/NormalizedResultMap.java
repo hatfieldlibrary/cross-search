@@ -5,14 +5,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class NormalizedResult {
+public class NormalizedResultMap {
 
     @NonNull
     NormalizedPager pager;
     @NonNull
-    Map<String, List<NormalizedRecord>> records;
+    HashMap<String, List<NormalizedRecord>> records;
 
     @NonNull
     public NormalizedPager getPager() {
@@ -24,12 +23,11 @@ public class NormalizedResult {
     }
 
     @NonNull
-    public Map<String, List<NormalizedRecord>> getRecords() {
+    public HashMap<String, List<NormalizedRecord>> getRecords() {
         return records;
     }
 
-    public void setRecords( @NonNull  Map<String, List<NormalizedRecord>> records) {
+    public void setRecords( @NonNull  HashMap<String, List<NormalizedRecord>> records) {
         this.records = records;
     }
-
 }
